@@ -51,6 +51,25 @@ export class Model{
         })
     }
 
+    getNextProductId(id:number):number{
+        let index = this.products.findIndex(p => this.locator(p,id));
+        if(index > -1){
+            return this.products[this.products.length > index + 2? index + 1:0].id;
+        }else{
+            return id || 0;
+        }
+    }
+
+    getPreviousProductId(id:number):number{
+        let index = this.products.findIndex(p => this.locator(p,id));
+        if(index > -1){
+            return this.products[index > 0 ? index -1 : this.products.length-1].id;
+
+        }else{
+            return id || 0;
+        }
+    }
+
     private generateID():number{
         let candidate = 100;
         while(this.getProduct(candidate) != null){

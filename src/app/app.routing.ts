@@ -1,6 +1,15 @@
 import {Routes,RouterModule} from "@angular/router";
 import {TableComponent} from "./core/table.component";
 import {FormComponent} from "./core/form.component";
+import {NotFoundComponent} from "./core/notFound.component";
+import {ProductCountComponent} from "./core/productCount.component";
+import {CategoryCountComponent} from "./core/categoryCount.component";
+
+const childRoutes: Routes = [
+    {path:"products",component:ProductCountComponent},
+    {path:"categories",component:CategoryCountComponent},
+    {path:"",component:ProductCountComponent}
+]
 
 const routes:Routes = [
     {
@@ -10,11 +19,21 @@ const routes:Routes = [
         path:"form/:mode",component:FormComponent
 
     },
+    {
+        path:"does",redirectTo:"/form/create",pathMatch:"prefix"
+    },{
+        path:"table",component:TableComponent,
+        children:childRoutes
+    },{
+        path:"table/:category",component:TableComponent,children:childRoutes
+    },
     // {
     //     path:"form/create",component:FormComponent
     // },
     {
-        path:"",component:TableComponent
+        path:"",component:TableComponent,pathMatch:"full"
+    },{
+        path:"**",component:NotFoundComponent
     }
 ]
 

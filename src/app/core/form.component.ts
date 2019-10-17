@@ -16,8 +16,8 @@ import {ActivatedRoute,Router} from "@angular/router";
 
 export class FormComponent{
     product: Product = new Product();
-    lastId:number;
-    editing: boolean = false;
+    // lastId:number;
+    
 
     // constructor(private model:Model,@Inject(SHARED_STATE) private stateEvents: Observable<SharedState>){
     //     stateEvents
@@ -31,49 +31,43 @@ export class FormComponent{
         //     }
         //     this.editing = update.mode == MODES.EDIT;
         // })
+        editing: boolean = false;
         constructor(private model:Model,activeRoute:ActivatedRoute,private router:Router){
-            this.editing = activeRoute.snapshot.params["mode"] == "edit";
-            let id = activeRoute.snapshot.params["id"];
-            if(id != null){
-                let name = activeRoute.snapshot.params["name"];
-                let category = activeRoute.snapshot.params["category"];
-                let price = activeRoute.snapshot.params["price"];
-                if(name != null && category != null && price != null){
-                    this.product.id = id;
-                    this.product.name = name;
-                    this.product.category = category;
-                    this.product.price = Number.parseFloat(price);
-                }else{
+
+            activeRoute.params.subscribe(params => {
+                console.log(`Params is ${params.mode}`);
+                this.editing = params["mode"] == "edit";
+                console.log(`${this.editing}`)
+                let id = params["id"];
+                if(id != null){
                     Object.assign(this.product,model.getProduct(id) || new Product());
                 }
-                
-            }
+            })
+
+            // this.editing = activeRoute.snapshot.params["mode"] == "edit";
+            // console.log(`Editing is ${this.editing}`)
+            
+            // let id = activeRoute.snapshot.params["id"];
+            // if(id != null){
+                // let name = activeRoute.snapshot.params["name"];
+                // let category = activeRoute.snapshot.params["category"];
+                // let price = activeRoute.snapshot.params["price"];
+                // if(name != null && category != null && price != null){
+                //     this.product.id = id;
+                //     this.product.name = name;
+                //     this.product.category = category;
+                //     this.product.price = Number.parseFloat(price);
+                // }else{
+                //     Object.assign(this.product,model.getProduct(id) || new Product());
+                // }
+                // debugger;
+                // Object.assign(this.product,model.getProduct(id) || new Product());          
+            // }
         }
-
-        // .pipe(filter(id => id != 3))
-        // .subscribe((id)=> {
-        //     this.editing = id != -1;
-        //     this.product = new Product();
-        //     if(id != -1){
-        //         Object.assign(this.product,this.model.getProduct(id))
-        //     }
-        // })
-        // pipe(map(state => new SharedState(state.mode,state.id ==5 ? 1: state.id)))
-        // stateEvents.pipe(filter(state=> state.id != 3))
-        // .subscribe((update) => {
-        //     this.product = new Product();
-        //     if(update.id != undefined){
-        //         Object.assign(this.product,this.model.getProduct(update.id));
-        //     }
-        //     this.editing = update.mode == MODES.EDIT;
-        // })
-    // }
-
-    // get editing():boolean{
-    //     return this.state.mode == MODES.EDIT;
-    // }
+        
 
     submitForm(form:NgForm){
+        
         if(form.valid){
             this.model.saveProduct(this.product);
             // this.product = new Product();
